@@ -1,3 +1,26 @@
+//list of all character
+var charList = [
+	["name1",5,"name1.jpg","namw1.wmv", 100],
+	["name2",10,"name2.jpg","namw2.wmv", 110],
+	["name3",15,"name3.jpg","namw3.wmv", 150],
+	["name4",5,"name4.jpg","namw4.wmv",120]
+	];
+var nameList =[];
+var user;
+var defender;
+var charClass = "charClass";
+	function charConstuct(list){
+		//creates all the objects for the character
+		for (var i = 0; i < list.length; i++) {
+			window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[i][4]);
+			nameList.push(list[i][0]);
+		}
+		for (var i = 0; i < nameList.length; i++) {
+			window[nameList[i]].create();
+			$(window[nameList[i]].id).on("click",userClick.bind(window[nameList[i]]));
+		};
+	};
+
 function defenderClick(){
 	//sets defender and removes from list
 	this.delete();
@@ -32,14 +55,35 @@ function userClick(){
 		$(item.id).on("click", defenderClick.bind(item));
 	}
 	};
+function restartButton(){
+	var button = $("<button>");
+	button.html("Restart");
+	button.attr("type", "button");
+	button.attr("id", "restartButton");
+	$("#attackArea").append(button);
+	$("#restartButton").on("click", function(){
+		charConstuct(charList);
+		$(this).remove();
+	});
+}
+
 function gameWin(){
 	defender.delete();
+	user.delete();
+	restartButton();
 
 }
 function gameLose(){
 	user.delete();
+	defender.delete();
+	for (var i = 0; i < nameList.length; i++) {
+		window[nameList[i]].delete();
+	}
+	nameList = [];
+	restartButton();
 }
 function compKilled(target){
+	//deletes defender when dies and re calls defenderClick on other remaining emenys
 	target.delete();
 	$("#fightButton").unbind("click")
 	for (var i = 0; i < nameList.length; i++) {
@@ -48,6 +92,7 @@ function compKilled(target){
 	}
 }
 function combatCheck(player, target){
+	//checks for win or loss
 	if(player.health <= 0){
 		gameLose();
 	}
@@ -72,11 +117,11 @@ var create = function(){
 	item.append($("<h2>").addClass("attack").html("attack:"))
 		.append($("<div>").attr("id",this.name+"Damage").html(this.damage));
 	$(this.location).append(item);
-}
+};
 var objDelete =  function(){
 	//gets rid of the box with image and nae for char object;
 	$(this.id).remove();
-}
+};
 var enemyArea = function(){
 		
 		this.location = "#enemyArea";
@@ -88,7 +133,7 @@ var enemyArea = function(){
 var defenderArea = function(){
 	this.location = "#defenderArea"
 	this.create();
-}
+};
 var attack = function(target){
 	target.health -= this.damage;
 	this.health -= target.damage;
@@ -97,11 +142,11 @@ var attack = function(target){
 	target.updateStats();
 	combatCheck(this, target);
 
-}
+};
 var updateStats = function(){
 	$(this.id+"Health").html(this.health);
 	$(this.id+"Damage").html(this.damage);
-}
+};
 function char(name, damage, img, sound, health){
 	//object constructor
 	this.name = name;
@@ -111,8 +156,6 @@ function char(name, damage, img, sound, health){
 	this.img = "assets/images/"+img;
 	this.sound = "assets/sounds/"+sound;
 	this.location = "#userArea";
-	this.alive = true;
-	this.user = false;
 	this.class = "userChoice";
 	this.id = "#"+name;
 	this.create = create;
@@ -121,31 +164,7 @@ function char(name, damage, img, sound, health){
 	this.enemyArea = enemyArea;
 	this.defenderArea =defenderArea;
 	this.updateStats = updateStats;
-}
-//list of all character
-var charList = [
-	["name1",5,"name1.jpg","namw1.wmv", 100],
-	["name2",10,"name2.jpg","namw2.wmv", 110],
-	["name3",15,"name3.jpg","namw3.wmv", 150],
-	["name4",5,"name4.jpg","namw4.wmv",120]
-	];
-var nameList =[];
-var user;
-var defender;
-var charClass = "charClass";
-	function charConstuct(list){
-		//creates all the objects for the character
-		for (var i = 0; i < list.length; i++) {
-			window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[i][4]);
-			nameList.push(list[i][0]);
-		}
-		for (var i = 0; i < nameList.length; i++) {
-			window[nameList[i]].create();
-			$(window[nameList[i]].id).on("click",userClick.bind(window[nameList[i]]));
-		};
-	};
-
-	
+};
 	charConstuct(charList);
 	
 
