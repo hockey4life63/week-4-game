@@ -1,28 +1,106 @@
+function defenderClick(){
+	//sets defender and removes from list
+	this.delete();
+	this.defenderArea();
+	defender = this;
+	let index = nameList.indexOf(this.name);
+	nameList.splice(index, 1);
+	//removes other click listners
+	for (var i = 0; i < nameList.length; i++) {
+		let item = window[nameList[i]];
+		$(item.id).unbind("click");
+	};
+	$("#fightButton").on("click", function(){
+		user.attack(defender);
+	});
+};
+
+function userClick(){
+	//must be called with a bind() for this to work
+	//removes clicked character frm nameList and sets it user to True
+	$(this.id).unbind();
+	let index = nameList.indexOf(this.name);
+	this.user = true;
+	user = this;
+	nameList.splice(index,1);
+	//deletes other character boxs
+	for (var i = 0; i < nameList.length; i++) {
+		let item = window[nameList[i]];
+		item.delete();
+		item.enemyArea();
+		//move nect one clicked to defender and removes click listener from other 2
+		$(item.id).on("click", defenderClick.bind(item));
+	}
+	};
+function gameWin(){
+	defender.delete();
+
+}
+function gameLose(){
+	user.delete();
+}
+function compKilled(target){
+	target.delete();
+	$("#fightButton").unbind("click")
+	for (var i = 0; i < nameList.length; i++) {
+		let item = window[nameList[i]];
+		$(item.id).on("click", defenderClick.bind(item));
+	}
+}
+function combatCheck(player, target){
+	if(player.health <= 0){
+		gameLose();
+	}
+	else if(target.health <= 0){
+		if(nameList.length === 0){
+			gameWin();
+			return
+		}
+		compKilled(target);
+	}
+
+}
 var create = function(){
 	//create the box with the image and name for the char object
 	var item =$("<div>");
 	item.attr("id", this.name);
 	item.append($("<img>").attr("src",this.img).addClass("charImg"));
-	item.addClass(this.class);
+	item.addClass(this.class+ " "+charClass);
 	item.append($("<h2>").addClass("charName").html(this.name))
+	item.append($("<h2>").addClass("health").html("Health:"))
+		.append($("<div>").attr("id",this.name+"Health").html(this.health));
+	item.append($("<h2>").addClass("attack").html("attack:"))
+		.append($("<div>").attr("id",this.name+"Damage").html(this.damage));
 	$(this.location).append(item);
 }
 var objDelete =  function(){
 	//gets rid of the box with image and nae for char object;
-	var loc = "#"+this.name;
-	$(loc).remove();
+	$(this.id).remove();
 }
 var enemyArea = function(){
 		
 		this.location = "#enemyArea";
 		this.create();
+		$(this.id).removeClass(this.class);
+		this.class = "defenderChoice";
+		$(this.id).addClass(this.class);
 	};
 var defenderArea = function(){
 	this.location = "#defenderArea"
 	this.create();
 }
 var attack = function(target){
+	target.health -= this.damage;
+	this.health -= target.damage;
+	this.damage += this.attackIncrease;
+	this.updateStats();
+	target.updateStats();
+	combatCheck(this, target);
 
+}
+var updateStats = function(){
+	$(this.id+"Health").html(this.health);
+	$(this.id+"Damage").html(this.damage);
 }
 function char(name, damage, img, sound, health){
 	//object constructor
@@ -31,6 +109,7 @@ function char(name, damage, img, sound, health){
 	this.attackIncrease =damage;
 	this.health = health
 	this.img = "assets/images/"+img;
+	this.sound = "assets/sounds/"+sound;
 	this.location = "#userArea";
 	this.alive = true;
 	this.user = false;
@@ -41,6 +120,7 @@ function char(name, damage, img, sound, health){
 	this.attack = attack;
 	this.enemyArea = enemyArea;
 	this.defenderArea =defenderArea;
+	this.updateStats = updateStats;
 }
 //list of all character
 var charList = [
@@ -51,47 +131,23 @@ var charList = [
 	];
 var nameList =[];
 var user;
+var defender;
+var charClass = "charClass";
 	function charConstuct(list){
 		//creates all the objects for the character
 		for (var i = 0; i < list.length; i++) {
-			window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[4]);
+			window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[i][4]);
 			nameList.push(list[i][0]);
 		}
+		for (var i = 0; i < nameList.length; i++) {
+			window[nameList[i]].create();
+			$(window[nameList[i]].id).on("click",userClick.bind(window[nameList[i]]));
+		};
 	};
 
-	function userClick(){
-		//must be called with a bind() for this to work
-		//removes clicked character frm nameList and sets it user to True
-		$(this.id).unbind();
-		let index = nameList.indexOf(this.name);
-		this.user = true;
-		user = this;
-		nameList.splice(index,1);
-		//deletes other character boxs
-		for (var i = 0; i < nameList.length; i++) {
-			let item = window[nameList[i]];
-			item.delete();
-			item.enemyArea();
-			//move nect one clicked to defender and removes click listener from other 2
-			$(item.id).on("click", function(){
-				item.delete();
-				item.defenderArea();
-				let index = nameList.indexOf(item.name);
-				nameList.splice(index, 1)
-				//removes other click listners
-				for (var i = 0; i < nameList.length; i++) {
-					let item = window[nameList[i]];
-					$(item.id).unbind("click");
-				}
-			});
-		}
-	};
 	
 	charConstuct(charList);
-	for (var i = 0; i < nameList.length; i++) {
-		window[nameList[i]].create();
-		$(window[nameList[i]].id).on("click",userClick.bind(window[nameList[i]]));
-	};
+	
 
 /*
 obj{

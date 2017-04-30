@@ -13,9 +13,12 @@ body{
 .charName{
 
 }
-.userChoice{
+.charClass{
 	width: 300px;
 	height: 200px;
 	border: 4px solid black;
 	display: inline-block;
+}
+.defenderChoice{
+	background-color: red;
 }
