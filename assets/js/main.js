@@ -24,11 +24,12 @@ var defenderArea = function(){
 var attack = function(target){
 
 }
-function char(name, damage, img, sound){
+function char(name, damage, img, sound, health){
 	//object constructor
 	this.name = name;
 	this.damage = damage;
 	this.attackIncrease =damage;
+	this.health = health
 	this.img = "assets/images/"+img;
 	this.location = "#userArea";
 	this.alive = true;
@@ -42,16 +43,18 @@ function char(name, damage, img, sound){
 	this.defenderArea =defenderArea;
 }
 //list of all character
-var charList = [["name1",5,"name1.jpg","namw1.wmv"],
-	["name2",10,"name2.jpg","namw2.wmv"],
-	["name3",15,"name3.jpg","namw3.wmv"],
-	["name4",5,"name4.jpg","namw4.wmv"]];
+var charList = [
+	["name1",5,"name1.jpg","namw1.wmv", 100],
+	["name2",10,"name2.jpg","namw2.wmv", 110],
+	["name3",15,"name3.jpg","namw3.wmv", 150],
+	["name4",5,"name4.jpg","namw4.wmv",120]
+	];
 var nameList =[];
 var user;
 	function charConstuct(list){
 		//creates all the objects for the character
 		for (var i = 0; i < list.length; i++) {
-			window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3]);
+			window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[4]);
 			nameList.push(list[i][0]);
 		}
 	};
