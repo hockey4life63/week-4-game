@@ -59,6 +59,7 @@ var user;
 	function userClick(){
 		//must be called with a bind() for this to work
 		//removes clicked character frm nameList and sets it user to True
+		$(this.id).unbind();
 		let index = nameList.indexOf(this.name);
 		this.user = true;
 		user = this;
@@ -68,11 +69,13 @@ var user;
 			let item = window[nameList[i]];
 			item.delete();
 			item.enemyArea();
+			//move nect one clicked to defender and removes click listener from other 2
 			$(item.id).on("click", function(){
 				item.delete();
 				item.defenderArea();
 				let index = nameList.indexOf(item.name);
 				nameList.splice(index, 1)
+				//removes other click listners
 				for (var i = 0; i < nameList.length; i++) {
 					let item = window[nameList[i]];
 					$(item.id).unbind("click");
