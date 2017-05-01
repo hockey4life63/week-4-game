@@ -14,20 +14,21 @@ h1{
 .charImg{
 	display: block;
 	margin: 0 auto;
-	height: 150px;
-
-}
-.charName{
+	height: 117px;
 
 }
 .charClass{
-	width: 300px;
-	height: 250px;
+	width: 235px;
+	height: 150px;
 	border: 4px solid white;
 	display: inline-block;
 }
 .charClass h2{
 	margin-left: 10px;
+	display: inline-block;
+}
+.charName{
+	display: block;
 }
 .userChoice{
 	background-color: blue;

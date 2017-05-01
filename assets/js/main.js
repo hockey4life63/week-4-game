@@ -3,7 +3,7 @@ var charList = [
 	["korben",5,"korben-dallas.jpg","namw1.wmv", 100,"Korben Dallas"],
 	["leeloo",10,"leeloo.jpg","namw2.wmv", 110, "Leeloo"],
 	["ruby",15,"ruby-rhod.jpg","namw3.wmv", 150, "Ruby Rhod"],
-	["zorg",5,"zorg.jpg","zorg.wav",120, "Jean-Baptiste Zorg"]
+	["zorg",5,"zorg.jpg","zorg.wav",120, "Zorg"]
 	];
 var nameList =[];
 var user;
@@ -59,23 +59,26 @@ function userClick(){
 	}
 	};
 function restartButton(){
-	var button = $("<button>");
+	let button = $("<button>");
 	button.html("Restart");
 	button.attr("type", "button");
 	button.attr("id", "restartButton");
 	$("#attackArea").append(button);
 	$("#restartButton").on("click", function(){
 		charConstuct(charList);
+		$(this).unbind();
 		$(this).remove();
 	});
 }
 
 function gameWin(){
+	$("#fightButton").unbind();
 	defender.delete();
 	user.delete();
 	restartButton();
 }
 function gameLose(){
+	$("#fightButton").unbind();
 	user.delete();
 	defender.delete();
 	for (var i = 0; i < nameList.length; i++) {
@@ -87,6 +90,7 @@ function gameLose(){
 function compKilled(target){
 	//deletes defender when dies and re calls defenderClick on other remaining emenys
 	target.delete();
+	$("#gameLog").html($("#gameLog").html()+"<p>You Killed "+target.displayName+"</p>");
 	$("#fightButton").unbind("click")
 	for (var i = 0; i < nameList.length; i++) {
 		let item = window[nameList[i]];
@@ -146,6 +150,9 @@ var defenderArea = function(){
 };
 var attack = function(target){
 	//applys damage
+	$("#gameLog").html(
+		"<p>You attacked "+target.displayName+" for "+this.damage+" damage</p>"
+		);
 	target.health -= this.damage;
 	this.damage += this.attackIncrease;
 	//checks if emeny died and returns
@@ -154,6 +161,9 @@ var attack = function(target){
 		this.updateStats();
 		return
 	}
+	$("#gameLog").html(
+		$("#gameLog").html()+"<p>"+target.displayName+" attacked you for "+target.damage+" dameage</p>"
+		);
 	//applys counter attack if enemy lives
 	this.health -= target.damage;
 	this.updateStats();
