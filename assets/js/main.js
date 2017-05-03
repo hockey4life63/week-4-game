@@ -1,26 +1,26 @@
-//list of all character
+//list of all character all can win DONT CHANGE HEALTH OR ATTACK VALUES!!!!
 var charList = [
-	["korben",5,"korben-dallas.jpg","namw1.wmv", 100,"Korben Dallas"],
-	["leeloo",10,"leeloo.jpg","namw2.wmv", 110, "Leeloo"],
+	["korben",10,"korben-dallas.jpg","namw1.wmv", 120,"Korben Dallas"],
+	["leeloo",20,"leeloo.jpg","namw2.wmv", 90, "Leeloo"],
 	["ruby",15,"ruby-rhod.jpg","namw3.wmv", 150, "Ruby Rhod"],
-	["zorg",5,"zorg.jpg","zorg.wav",120, "Zorg"]
+	["zorg",5,"zorg.jpg","zorg.wav",160, "Zorg"]
 	];
 var nameList =[];
 var user;
 var defender;
 var charClass = "charClass";
-	function charConstuct(list){
-		//creates all the objects for the character
-		for (var i = 0; i < list.length; i++) {
-			window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[i][4],list[i][5]);
-			nameList.push(list[i][0]);
-		}
-		//adds click listener
-		for (var i = 0; i < nameList.length; i++) {
-			window[nameList[i]].create();
-			$(window[nameList[i]].id).on("click",userClick.bind(window[nameList[i]]));
-		};
+function charConstuct(list){
+	//creates all the objects for the character
+	for (var i = 0; i < list.length; i++) {
+		window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[i][4],list[i][5]);
+		nameList.push(list[i][0]);
+	}
+	//adds click listener
+	for (var i = 0; i < nameList.length; i++) {
+		window[nameList[i]].create();
+		$(window[nameList[i]].id).on("click",userClick.bind(window[nameList[i]]));
 	};
+};
 function defenderClick(){
 	//sets defender and removes from list
 	this.delete();
