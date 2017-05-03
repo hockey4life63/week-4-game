@@ -39,3 +39,6 @@ h1{
 .defenderChoice{
 	background-color: black;
 }
+#enemyArea{
+	min-height: 160px;
+}

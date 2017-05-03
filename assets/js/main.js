@@ -66,6 +66,7 @@ function restartButton(){
 	$("#attackArea").append(button);
 	$("#restartButton").on("click", function(){
 		charConstuct(charList);
+		$("#gameLog").html("");
 		$(this).unbind();
 		$(this).remove();
 	});
@@ -76,6 +77,7 @@ function gameWin(){
 	defender.delete();
 	user.delete();
 	restartButton();
+	$("#gameLog").html("You win press restart to play agian");
 }
 function gameLose(){
 	$("#fightButton").unbind();
@@ -86,6 +88,7 @@ function gameLose(){
 	}
 	nameList = [];
 	restartButton();
+	$("#gameLog").html("You lose better luck next time. press resrat to try agian")
 }
 function compKilled(target){
 	//deletes defender when dies and re calls defenderClick on other remaining emenys
