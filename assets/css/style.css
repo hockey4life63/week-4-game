@@ -45,3 +45,8 @@ h1{
 #userArea{
 	min-height: 160px;
 }
+.winMsg{
+	border-color: yellow;
+    padding: 10px;
+    font-size: 30px;
+}

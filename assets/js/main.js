@@ -1,9 +1,12 @@
-//list of all character all can win DONT CHANGE HEALTH OR ATTACK VALUES!!!!
+//list of all character all can win now they all workDONT CHANGE STATS!!!
+// low hp low counter hi attack
+// high hp high counter low base
+//oder(obj name, attack, image, sound, health,display name, counter attack)
 var charList = [
-	["korben",10,"korben-dallas.jpg","namw1.wmv", 120,"Korben Dallas"],
-	["leeloo",20,"leeloo.jpg","namw2.wmv", 90, "Leeloo"],
-	["ruby",15,"ruby-rhod.jpg","namw3.wmv", 150, "Ruby Rhod"],
-	["zorg",5,"zorg.jpg","zorg.wav",160, "Zorg"]
+	["korben",14,"korben-dallas.jpg","namw1.wmv", 60,"Korben Dallas",10],
+	["leeloo",13,"leeloo.jpg","namw2.wmv", 50, "Leeloo",14],
+	["ruby",8,"ruby-rhod.jpg","namw3.wmv", 70, "Ruby Rhod",12],
+	["zorg",5,"zorg.jpg","zorg.wav",75, "Zorg",25]
 	];
 var nameList =[];
 var user;
@@ -12,7 +15,7 @@ var charClass = "charClass";
 function charConstuct(list){
 	//creates all the objects for the character
 	for (var i = 0; i < list.length; i++) {
-		window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[i][4],list[i][5]);
+		window[list[i][0]] = new char(list[i][0],list[i][1],list[i][2],list[i][3],list[i][4],list[i][5],list[i][6]);
 		nameList.push(list[i][0]);
 	}
 	//adds click listener
@@ -77,7 +80,7 @@ function gameWin(){
 	defender.delete();
 	user.delete();
 	restartButton();
-	$("#gameLog").html("You win press restart to play agian");
+	$("#gameLog").html("<h1 class='winMsg'>You win press restart to play agian</h1>");
 }
 function gameLose(){
 	$("#fightButton").unbind();
@@ -88,7 +91,7 @@ function gameLose(){
 	}
 	nameList = [];
 	restartButton();
-	$("#gameLog").html("You lose better luck next time. press resrat to try agian")
+	$("#gameLog").html("<h1 class='winMsg'>You lose better luck next time. press resrat to try agian</h1>")
 }
 function compKilled(target){
 	//deletes defender when dies and re calls defenderClick on other remaining emenys
@@ -113,7 +116,7 @@ function combatCheck(player, target){
 		compKilled(target);
 	}
 
-}
+};
 var create = function(){
 	//create the box with the image and name for the char object
 	var item =$("<div>");
@@ -129,8 +132,8 @@ var create = function(){
 	item.append($("<h2>").addClass("health").html("Health:")
 		.append($("<div>").attr("id",this.name+"Health").html(this.health)));
 	//adds attack info and ids to change it
-	item.append($("<h2>").addClass("attack").html("attack:")
-		.append($("<div>").attr("id",this.name+"Damage").html(this.damage)));
+	// item.append($("<h2>").addClass("attack").html("attack:")
+	// 	.append($("<div>").attr("id",this.name+"Damage").html(this.damage)));
 	$(this.location).append(item);
 };
 var objDelete =  function(){
@@ -165,10 +168,10 @@ var attack = function(target){
 		return
 	}
 	$("#gameLog").html(
-		$("#gameLog").html()+"<p>"+target.displayName+" attacked you for "+target.damage+" dameage</p>"
+		$("#gameLog").html()+"<p>"+target.displayName+" attacked you for "+target.counterAttack+" dameage</p>"
 		);
 	//applys counter attack if enemy lives
-	this.health -= target.damage;
+	this.health -= target.counterAttack;
 	this.updateStats();
 	target.updateStats();
 	combatCheck(this, target);
@@ -177,12 +180,13 @@ var updateStats = function(){
 	$(this.id+"Health").html(this.health);
 	$(this.id+"Damage").html(this.damage);
 };
-function char(name, damage, img, sound, health, displayName){
+function char(name, damage, img, sound, health, displayName,counterAttack){
 	//object constructor
 	this.name = name
 	this.displayName =displayName;
 	this.damage = damage;
 	this.attackIncrease =damage;
+	this.counterAttack = counterAttack
 	this.health = health
 	this.img = "assets/images/"+img;
 	this.sound = new Audio("assets/sounds/"+sound);
