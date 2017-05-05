@@ -1,12 +1,12 @@
 //list of all character all can win now they all work DONT CHANGE STATS!!!
 // low hp low counter hi attack
 // high hp high counter low base
-//oder(obj name, attack, image, sound, health,display name, counter attack)
+//oder(obj name, attack, image, health,display name, counter attack)
 var charList = [
-    ["korben", 14, "korben-dallas.jpg", "namw1.wmv", 60, "Korben Dallas", 10],
-    ["leeloo", 13, "leeloo.jpg", "namw2.wmv", 50, "Leeloo", 14],
-    ["ruby", 8, "ruby-rhod.jpg", "namw3.wmv", 70, "Ruby Rhod", 12],
-    ["zorg", 5, "zorg.jpg", "zorg.wav", 75, "Zorg", 25]
+    ["korben", 14, "korben-dallas.jpg", 60, "Korben Dallas", 10],
+    ["leeloo", 13, "leeloo.jpg", 50, "Leeloo", 14],
+    ["ruby", 8, "ruby-rhod.jpg", 70, "Ruby Rhod", 12],
+    ["zorg", 5, "zorg.jpg", 75, "Zorg", 25]
 ];
 var nameList = [];
 var user;
@@ -16,7 +16,7 @@ var charClass = "charClass";
 function charConstuct(list) {
     //creates all the objects for the character
     for (var i = 0; i < list.length; i++) {
-        window[list[i][0]] = new char(list[i][0], list[i][1], list[i][2], list[i][3], list[i][4], list[i][5], list[i][6]);
+        window[list[i][0]] = new char(list[i][0], list[i][1], list[i][2], list[i][3], list[i][4], list[i][5]);
         nameList.push(list[i][0]);
     }
     //adds click listener
@@ -28,6 +28,7 @@ function charConstuct(list) {
 
 function defenderClick() {
     //sets defender and removes from list
+    //must be called with a bind() for this to work
     this.delete();
     this.defenderArea();
     //sets as the defender
@@ -49,7 +50,6 @@ function defenderClick() {
 function userClick() {
     //must be called with a bind() for this to work
     //removes clicked character frm nameList and sets it user to True
-    this.sound.play();
     $(this.id).unbind();
     let index = nameList.indexOf(this.name);
     user = this;
@@ -138,7 +138,7 @@ var create = function() {
         .append($("<div>").attr("id", this.name + "Health").html(this.health)));
     //adds attack info and ids to change it
     // item.append($("<h2>").addClass("attack").html("attack:")
-    // 	.append($("<div>").attr("id",this.name+"Damage").html(this.damage)));
+    //  .append($("<div>").attr("id",this.name+"Damage").html(this.damage)));
     $(this.location).append(item);
 };
 var objDelete = function() {
@@ -186,7 +186,7 @@ var updateStats = function() {
     $(this.id + "Damage").html(this.damage);
 };
 
-function char(name, damage, img, sound, health, displayName, counterAttack) {
+function char(name, damage, img, health, displayName, counterAttack) {
     //object constructor
     this.name = name
     this.displayName = displayName;
@@ -195,7 +195,6 @@ function char(name, damage, img, sound, health, displayName, counterAttack) {
     this.counterAttack = counterAttack
     this.health = health
     this.img = "assets/images/" + img;
-    this.sound = new Audio("assets/sounds/" + sound);
     this.location = "#userArea";
     this.class = "userChoice";
     this.id = "#" + name;
@@ -206,43 +205,45 @@ function char(name, damage, img, sound, health, displayName, counterAttack) {
     this.defenderArea = defenderArea;
     this.updateStats = updateStats;
 };
-charConstuct(charList);
+$(document).ready(function() {
+    charConstuct(charList);
+})
 
 
 /*
 obj{
-	name
-	damage 
-	attackIncrease
-	img
-	attack sound
-	location
-	alive bool
-	user bool
-	css class
-	func creat html
-		creats te html box and sets to correct location
-	func delete html
-		removes the html box from location
-	func attack
-		attacks as the user and increase attack
-	func compAttack
-		attacks as comp without increase
-	
+    name
+    damage 
+    attackIncrease
+    img
+    attack sound
+    location
+    alive bool
+    user bool
+    css class
+    func creat html
+        creats te html box and sets to correct location
+    func delete html
+        removes the html box from location
+    func attack
+        attacks as the user and increase attack
+    func compAttack
+        attacks as comp without increase
+    
 }
-	game logic
-	creat page with all 4 choices
-	user chooses one and other three are set as comps
-	user chooses enemy 
-	attack applys attck damn to both and updates html
-	if user reachs 0 they lose and ask to reset
-	if comp dies delete it from game field allow user to select new enemy 
-	repeat till user dies or wins
-	ask to reset
-	funcs needed
-		creat game space/reset
-		combat
-		game lose
-		game win
-		
+    game logic
+    creat page with all 4 choices
+    user chooses one and other three are set as comps
+    user chooses enemy 
+    attack applys attck damn to both and updates html
+    if user reachs 0 they lose and ask to reset
+    if comp dies delete it from game field allow user to select new enemy 
+    repeat till user dies or wins
+    ask to reset
+    funcs needed
+        creat game space/reset
+        combat
+        game lose
+        game win
+        
 */
